@@ -1,0 +1,7 @@
+This is a Java application. It compiles and runs on Java version 8. Java JDK8 must be installed and the JDK8 bin directory must be in the PATH environment variable.
+
+To compile execute 'javac Process.java'.
+
+To run execute 'java Process' .
+
+The questions are answered in the output from the program.

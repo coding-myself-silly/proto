@@ -24,6 +24,8 @@ public class Process {
             transactions.clear();
         } catch (IOException ioe) {
             System.out.println(ioe);
+        } catch (CorruptTransactionTypeException ctte) {
+            System.out.println(ctte);
         }
     }
 
@@ -40,7 +42,7 @@ public class Process {
     }
 
     static void readTransactions(int numberOfRecords, DataInputStream in, List<TransactionData> transactions)
-            throws IOException {
+            throws IOException, CorruptTransactionTypeException {
         for (int i = 0; i < numberOfRecords; i++) {
             TransactionData transaction = new TransactionData();
             transaction.setRecordType(TransactionType.fromByte(in.readByte()));
@@ -175,7 +177,7 @@ enum TransactionType {
         this.name = name;
     }
 
-    static TransactionType fromByte(byte code) {
+    static TransactionType fromByte(byte code) throws CorruptTransactionTypeException {
         switch (code) {
         case 0:
             return DEBIT;
@@ -186,8 +188,17 @@ enum TransactionType {
         case 3:
             return END_AUTOPLAY;
         default:
-            throw new RuntimeException("Transaction Type undefined " + code);
+            throw new CorruptTransactionTypeException("Transaction Type undefined " + code);
         }
     }
 
+}
+
+class CorruptTransactionTypeException extends Exception {
+    
+    static final long serialVersionUID = 3131l;
+    
+    CorruptTransactionTypeException(String message) {
+        super(message);
+    }
 }
